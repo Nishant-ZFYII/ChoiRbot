@@ -68,17 +68,39 @@ def generate_launch_description():
 
     # add executables for each robot
     for i in range(N):
-
         in_neighbors  = np.nonzero(Adj[:, i])[0].tolist()
         out_neighbors = np.nonzero(Adj[i, :])[0].tolist()
         weights = W[i,:].tolist()
         position = P[i, :].tolist()
+        if i != 0:  # exclude agent_0 from formation guidance
+            robot_launch.append(Node(
+            package='choirbot_examples',
+            executable='choirbot_formationcontrol_guidance',
+            output='screen',
+            namespace='agent_{}'.format(i),
+            parameters=[{
+                'agent_id': i,
+                'N': N,
+                'in_neigh': in_neighbors,
+                'out_neigh': out_neighbors,
+                'weights': weights
+        }]))
+        # manual WASD control for agent_0
+        if i == 0:
+            robot_launch.append(Node(
+                package='teleop_twist_keyboard',
+                executable='teleop_twist_keyboard',
+                name='keyboard_teleop',
+                prefix=['xterm -hold -e'],  # optional: to keep terminal open
+                output='screen',
+                remappings=[('/cmd_vel', '/agent_0/cmd_vel')]))
+
 
         # guidance
-        robot_launch.append(Node(
-            package='choirbot_examples', executable='choirbot_formationcontrol_guidance', output='screen',
-            namespace='agent_{}'.format(i),
-            parameters=[{'agent_id': i, 'N': N, 'in_neigh': in_neighbors, 'out_neigh': out_neighbors, 'weights': weights}]))
+        #robot_launch.append(Node(
+        #    package='choirbot_examples', executable='choirbot_formationcontrol_guidance', output='screen',
+        #    namespace='agent_{}'.format(i),
+        #    parameters=[{'agent_id': i, 'N': N, 'in_neigh': in_neighbors, 'out_neigh': out_neighbors, 'weights': weights}]))
         
         # controller
         robot_launch.append(Node(
