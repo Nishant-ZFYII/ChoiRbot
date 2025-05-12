@@ -26,12 +26,12 @@ def generate_launch_description():
     # communication matrix
     N = 6
     Adj = np.array([ # alternated zeros and ones
-        [0, 1, 0, 1, 0, 1],
-        [1, 0, 1, 0, 1, 0],
-        [0, 1, 0, 1, 0, 1],
-        [1, 0, 1, 0, 1, 0],
-        [0, 1, 0, 1, 0, 1],
-        [1, 0, 1, 0, 1, 0]
+        [0, 1, 1, 1, 1, 1],
+        [1, 0, 0, 0, 0, 0],
+        [1, 0, 0, 0, 0, 0],
+        [1, 0, 0, 0, 0, 0],
+        [1, 0, 0, 0, 0, 0],
+        [1, 0, 0, 0, 0, 0]
     ])
 
     # generate matrix of desired inter-robot distances
